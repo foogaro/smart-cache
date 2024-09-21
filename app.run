@@ -1,0 +1,1 @@
+docker run -it --rm=true --name=app -p 8080:8080 foogaro/redis-smart-cache-app:1.0.0

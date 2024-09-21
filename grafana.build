@@ -1,0 +1,1 @@
+docker build -t foogaro/redis-smart-cache-grafana:1.0.0 -f Dockerfile.grafana .
