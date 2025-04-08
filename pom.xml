@@ -29,6 +29,7 @@
         <maven.test.source>21</maven.test.source>
         <maven.test.target>21</maven.test.target>
         <maven.deploy.skip>true</maven.deploy.skip>
+        <redis-smart-cache-core.version>0.3.3</redis-smart-cache-core.version>
         <redis-smart-cache-jdbc.version>0.3.3</redis-smart-cache-jdbc.version>
         <javafaker.version>1.0.2</javafaker.version>
         <progressbar.version>0.10.1</progressbar.version>
@@ -55,6 +56,11 @@
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.redis</groupId>
+            <artifactId>redis-smart-cache-core</artifactId>
+            <version>${redis-smart-cache-jdbc.version}</version>
         </dependency>
         <dependency>
             <groupId>com.redis</groupId>
