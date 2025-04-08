@@ -500,7 +500,7 @@ Se Postman non hai, al seguente link lo troverai:
 - [https://www.postman.com/downloads/](https://www.postman.com/downloads/)
 
 Dopo aver scaricato e installato lo strumento sul vostro sistema operativo di sviluppo (ad esempio Linux o macOS), avviatelo e importate la mia Postman Collection in formato JSON disponibile al seguente link:
-- [Redis Smart Cache.postman_collection.json](Redis Smart Cache.postman_collection.json)
+- [Redis Smart Cache.postman_collection.json](Redis-Smart-Cache.postman_collection.json)
 
 Al termine del processo di importazione, dovreste ottenere una collezione simile alla seguente:
 
