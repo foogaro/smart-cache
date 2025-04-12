@@ -1,0 +1,103 @@
+services:
+  mysql:
+    build:
+      dockerfile: Dockerfile.mysql
+    image: foogaro/redis-smart-cache-mysql:1.0.0
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=redis
+      - MYSQL_USER=redis
+      - MYSQL_PASSWORD=redis
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - mysql_data:/var/lib/mysql
+    expose:
+      - 3306
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysql", "-u", "redis", "-predis", "-e", "SELECT 1 FROM information_schema.tables WHERE table_schema = 'redis'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - demo
+  redis:
+    build:
+      context: .
+      dockerfile: Dockerfile.redis
+    image: foogaro/redis-smart-cache-redis:1.0.0
+    container_name: redis
+    restart: unless-stopped
+    cap_add:
+      - SYS_RESOURCE
+    expose:
+      - 6379
+    ports:
+      - "6379:6379"
+    stdin_open: true
+    tty: true
+    networks:
+      - demo
+  grafana:
+    build:
+      dockerfile: Dockerfile.grafana
+    image: foogaro/redis-smart-cache-grafana:1.0.0
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      - GF_INSTALL_PLUGINS=redis-datasource
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
+      - GF_ENABLE_GZIP=true
+      - GF_USERS_DEFAULT_THEME=light
+      - GF_DEFAULT_APP_MODE=development
+      - GF_INSTALL_PLUGINS=redis-datasource
+    depends_on:
+      - app
+    cap_add:
+      - SYS_RESOURCE
+    expose:
+      - 3000
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    networks:
+      - demo
+  app:
+    build:
+      dockerfile: Dockerfile.app
+    image: foogaro/redis-smart-cache-app:1.0.0
+    container_name: app
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILE:-mysql}
+    cap_add:
+      - SYS_RESOURCE
+    expose:
+      - 8080
+    ports:
+      - "8080:8080"
+    stdin_open: true
+    tty: true
+    networks:
+      - demo
+
+networks:
+  demo:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.32.0.0/16
+
+volumes:
+  mysql_data:
+    driver: local

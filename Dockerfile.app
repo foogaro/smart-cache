@@ -17,7 +17,7 @@ RUN jdeps \
 # Create a custom Java runtime
 RUN jlink --add-modules $(cat modules.txt) --strip-debug --no-man-pages --no-header-files --compress=2 --output /app/javaruntime
 
-FROM debian:buster-slim
+FROM debian:buster-slim AS final
 ENV JAVA_HOME=/opt/java/openjdk
 ENV PATH "${JAVA_HOME}/bin:${PATH}"
 COPY --from=build /app/javaruntime $JAVA_HOME
